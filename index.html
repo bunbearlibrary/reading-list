@@ -218,7 +218,7 @@ function renderList(){
       ${typeTagsOf(b)}
       <div class="meta">约 ${(kb/1.4).toFixed(0)} 千字 · ${kb} KB</div>
       <a class="dl" href="./${encodeURIComponent(b.name)}" download
-         onclick="event.stopPropagation()">⬇️ 下载</a>
+         onclick="event.stopPropagation()">↓ 下载</a>
     </div>`;
   }).join("") || `<div class="center">🕳️ 书架空空如也<br>（或者没搜到呀）</div>`;
 }
