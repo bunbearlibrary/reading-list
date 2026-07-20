@@ -3,13 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🐻🐰 lib</title>
+<title>🐻🐰lib</title>
 <style>
   :root{
     --bg:#fff7ee; --card:#ffffff; --ink:#5c4033; --soft:#a5826a;
     --brown:#c08552; --pink:#f7a8b8; --pink-deep:#ef7d9a; --line:#f3e3d3;
+    --green:#7fb685; --green-bg:#e8f5ea; --orange:#e8a04c; --orange-bg:#fdf0dd;
+    --purple:#b48ec9; --purple-bg:#f3ebf9; --gray:#9a928a; --gray-bg:#f0ede9;
   }
-  body.night{ --bg:#211b16; --card:#2e2620; --ink:#e9dcd0; --soft:#b39a86; --line:#453a30; }
+  body.night{
+    --bg:#211b16; --card:#2e2620; --ink:#e9dcd0; --soft:#b39a86; --line:#453a30;
+    --green-bg:#26372a; --orange-bg:#3d3020; --purple-bg:#352b3d; --gray-bg:#35302a;
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{ background:var(--bg); color:var(--ink); min-height:100vh;
     font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
@@ -21,9 +26,8 @@
   @keyframes float{ 0%,100%{transform:translateY(0) rotate(-6deg);} 50%{transform:translateY(-14px) rotate(6deg);} }
   .wrap{ position:relative; z-index:1; max-width:720px; margin:0 auto; padding:24px 16px 60px; }
   header{ text-align:center; padding:28px 0 20px; }
-  header h1{ font-size:30px; letter-spacing:2px; }
-  header h1 .b{ color:var(--brown); } header h1 .r{ color:var(--pink-deep); }
-  header p{ margin-top:8px; color:var(--soft); font-size:14px; }
+  header h1{ font-size:32px; letter-spacing:2px; }
+  header p{ margin-top:8px; color:var(--soft); font-size:15px; letter-spacing:1px; }
   .toolbar{ display:flex; gap:10px; margin:14px 0 6px; }
   #search{ flex:1; padding:12px 18px; border-radius:999px; border:2px solid var(--line);
     background:var(--card); color:var(--ink); font-size:15px; outline:none; transition:border-color .2s; }
@@ -31,42 +35,59 @@
   #nightBtn{ border:2px solid var(--line); background:var(--card); border-radius:999px;
     width:46px; font-size:18px; cursor:pointer; }
   .stats{ color:var(--soft); font-size:13px; padding:4px 8px 12px; }
-  .book{ display:block; width:100%; text-align:left; background:var(--card); border:1px solid var(--line);
-    border-radius:18px; padding:16px 18px; margin-bottom:12px; cursor:pointer;
-    box-shadow:0 3px 10px rgba(140,95,55,.08); transition:transform .15s, box-shadow .15s;
-    font-family:inherit; color:var(--ink); }
-  .book:active{ transform:scale(.98); }
-  .book .tags{ margin-bottom:6px; }
+  .bd{ display:inline-block; font-size:12px; border-radius:999px; padding:2px 10px; margin:0 6px 4px 0; }
+  .bd-cp{ background:#fdeef2; color:var(--pink-deep); }
+  .bd-ok{ background:var(--green-bg); color:var(--green); }
+  .bd-ing{ background:var(--orange-bg); color:var(--orange); }
+  .bd-ex{ background:var(--purple-bg); color:var(--purple); }
+  .bd-todo{ background:var(--gray-bg); color:var(--gray); }
+  body.night .bd-cp{ background:#43302f; }
   .tag{ display:inline-block; background:#fdeef2; color:var(--pink-deep); font-size:12px;
-    border-radius:999px; padding:2px 10px; margin:0 6px 4px 0; }
+    border-radius:999px; padding:2px 10px; margin:0 6px 4px 0; cursor:pointer; border:none; font-family:inherit; }
   body.night .tag{ background:#43302f; }
-  .book .title{ font-size:17px; font-weight:600; line-height:1.5; }
-  .book .meta{ font-size:12px; color:var(--soft); margin-top:6px; }
+  .tag:active{ transform:scale(.94); }
+  .book{ position:relative; display:block; width:100%; text-align:left; background:var(--card);
+    border:1px solid var(--line); border-radius:18px; padding:16px 18px 14px; margin-bottom:12px;
+    cursor:pointer; box-shadow:0 3px 10px rgba(140,95,55,.08); transition:transform .15s; color:var(--ink); }
+  .book:active{ transform:scale(.98); }
+  .book .title{ font-size:17px; font-weight:600; line-height:1.5; margin:2px 90px 4px 0; }
+  .book .author{ font-size:13px; color:var(--soft); margin-bottom:6px; }
+  .book .meta{ font-size:12px; color:var(--soft); margin-top:8px; }
+  .dl{ position:absolute; right:14px; bottom:12px; display:inline-block; text-decoration:none;
+    background:var(--pink); color:#fff; font-size:13px; border-radius:999px; padding:6px 14px;
+    box-shadow:0 2px 6px rgba(239,125,154,.35); }
+  .dl:active{ transform:scale(.94); }
+  .dl2{ display:inline-block; text-decoration:none; background:var(--pink); color:#fff;
+    font-size:14px; border-radius:999px; padding:8px 18px; margin:4px 8px 0 0;
+    box-shadow:0 2px 6px rgba(239,125,154,.35); }
+  .rel{ background:var(--card); border:1px dashed var(--line); border-radius:14px;
+    padding:10px 14px; font-size:14px; margin-top:10px; }
+  .rel a{ color:var(--pink-deep); font-weight:600; }
   .center{ text-align:center; color:var(--soft); padding:60px 0; font-size:15px; line-height:2; }
   .readerBar{ position:sticky; top:0; z-index:5; display:flex; gap:8px; align-items:center;
     background:var(--bg); padding:10px 0; border-bottom:1px dashed var(--line); }
   .rbtn{ border:2px solid var(--line); background:var(--card); color:var(--ink);
     border-radius:999px; padding:8px 14px; font-size:14px; cursor:pointer; }
   .readerTitle{ font-size:22px; font-weight:700; margin:22px 0 6px; line-height:1.6; }
-  .readerMeta{ color:var(--soft); font-size:13px; margin-bottom:18px; }
-  #content{ font-size:18px; line-height:2; letter-spacing:.3px; }
+  .readerMeta{ color:var(--soft); font-size:13px; margin-bottom:6px; }
+  #content{ font-size:18px; line-height:2; letter-spacing:.3px; margin-top:14px; }
   #content p{ margin-bottom:1em; text-indent:2em; }
   .backTop{ text-align:center; margin-top:40px; }
-  a{ color:var(--pink-deep); }
 </style>
+<base target="_blank">
 </head>
 <body>
 <div class="deco d1">🐻</div><div class="deco d2">🐰</div>
 <div class="deco d3">🥕</div><div class="deco d4">🍯</div>
 <div class="wrap">
   <header>
-    <h1><span class="b">🐻</span> lib <span class="r">🐰</span></h1>
+    <h1>🐻 𝐋𝐈𝐁𝐑𝐀𝐑𝐘 🐰</h1>
     <p>◆ 复婚好吗，孩子总哭 ◆</p>
   </header>
 
   <div id="listView">
     <div class="toolbar">
-      <input id="search" type="search" placeholder="🔍 搜索篇名或标签…">
+      <input id="search" type="search" placeholder="🔍 搜索篇名、作者或标签…">
       <button id="nightBtn" title="夜间模式">🌙</button>
     </div>
     <div class="stats" id="stats">馆长正在清点藏书…</div>
@@ -82,18 +103,21 @@
     </div>
     <div class="readerTitle" id="rTitle"></div>
     <div class="readerMeta" id="rMeta"></div>
+    <div id="rTags"></div>
+    <div id="rRel"></div>
     <div id="content"></div>
     <div class="backTop"><button class="rbtn" onclick="goList()">← 回书架</button></div>
   </div>
 </div>
 
 <script>
-/* ====== 配置区（以后换仓库只改这里） ====== */
+/* ====== 配置区 ====== */
 const REPO  = "bunbearlibrary/reading-list";
 const BRANCH = "main";
-/* ======================================= */
+/* ==================== */
 
 let BOOKS = [];
+let NAME2BOOK = {};
 const $ = id => document.getElementById(id);
 
 function decodeBuf(buf){
@@ -101,15 +125,39 @@ function decodeBuf(buf){
   catch(e){ return new TextDecoder("gb18030").decode(buf); }
 }
 
-async function loadBooks(){
+function parseCSV(text){
+  const meta = {};
+  text.replace(/\r\n?/g,"\n").split("\n").slice(1).forEach(line=>{
+    if(!line.trim()) return;
+    const c = line.split(",").map(s=>s.trim());
+    if(!c[0]) return;
+    meta[c[0]] = {
+      title: c[1]||"", author: c[2]||"", status: c[3]||"",
+      parent: c[4]||"", tags: (c[5]||"").split("、").map(s=>s.trim()).filter(Boolean)
+    };
+  });
+  return meta;
+}
+
+async function loadAll(){
   try{
-    const r = await fetch(`https://api.github.com/repos/${REPO}/contents?ref=${BRANCH}`);
-    if(!r.ok) throw new Error("api");
-    const items = await r.json();
+    const [listR, csvR] = await Promise.all([
+      fetch(`https://api.github.com/repos/${REPO}/contents?ref=${BRANCH}`),
+      fetch("./books.csv?t=" + Date.now())
+    ]);
+    if(!listR.ok) throw new Error("api");
+    const items = await listR.json();
+    const META = csvR.ok ? parseCSV(decodeBuf(await csvR.arrayBuffer())) : {};
     BOOKS = items.filter(i => i.type==="file" && /\.txt$/i.test(i.name))
-                 .map(i => ({ name:i.name, size:i.size }))
-                 .sort((a,b)=> a.name.localeCompare(b.name,"zh"));
-    renderList();
+                 .map(i => ({ name:i.name, size:i.size, m:META[i.name]||null }));
+    BOOKS.sort((a,b)=>{
+      const ka=(a.m&&a.m.parent)||a.name, kb=(b.m&&b.m.parent)||b.name;
+      if(ka!==kb) return ka.localeCompare(kb,"zh");
+      const ea=(a.m&&a.m.parent)?1:0, eb=(b.m&&b.m.parent)?1:0;
+      return ea-eb || a.name.localeCompare(b.name,"zh");
+    });
+    NAME2BOOK = Object.fromEntries(BOOKS.map(b=>[b.name,b]));
+    renderList(); route();
   }catch(e){
     $("stats").innerHTML = "😢 书架暂时打不开（可能是请求太频繁）<br>稍等一分钟刷新试试～";
   }
@@ -117,41 +165,91 @@ async function loadBooks(){
 
 function parseName(name){
   const base = name.replace(/\.txt$/i,"");
-  const tags = [];
-  let t = base, m;
+  const tags = []; let t = base, m;
   const re = /^(\[[^\]]+\]|【[^】]+】)\s*/;
   while((m = t.match(re))){ tags.push(m[1].slice(1,-1)); t = t.slice(m[0].length); }
   return { title: t.trim() || base, tags };
 }
 
+function titleOf(b){ return (b.m && b.m.title) || parseName(b.name).title; }
+function cpTags(b){ return parseName(b.name).tags; }
+
+function statusBadge(m){
+  if(!m || !m.status) return "";
+  const cls = m.status.includes("连载")||m.status.includes("未完结") ? "bd-ing" : "bd-ok";
+  return `<span class="bd ${cls}">${esc(m.status)}</span>`;
+}
+function badgesOf(b){
+  let s = cpTags(b).map(t=>`<span class="bd bd-cp">${esc(t)}</span>`).join("");
+  s += statusBadge(b.m);
+  if(b.m && b.m.parent) s += `<span class="bd bd-ex">番外</span>`;
+  if(!b.m) s += `<span class="bd bd-todo">📝 待编目</span>`;
+  return s;
+}
+function typeTagsOf(b){
+  if(!b.m || !b.m.tags.length) return "";
+  return `<div>${b.m.tags.map(t=>
+    `<button class="tag" onclick="event.stopPropagation();searchTag('${esc(t)}')">${esc(t)}</button>`).join("")}
+  </div>`;
+}
+
 function renderList(){
   const kw = $("search").value.trim().toLowerCase();
-  const shown = BOOKS.filter(b => !kw || b.name.toLowerCase().includes(kw));
-  $("stats").textContent = `📚 馆藏 ${BOOKS.length} 篇` + (kw ? ` · 搜到 ${shown.length} 篇` : "");
+  const hit = b => !kw || [b.name, titleOf(b), b.m?b.m.author:"", b.m?b.m.status:"", (b.m?b.m.tags:[]).join("、")]
+                     .join(" ").toLowerCase().includes(kw);
+  const shown = BOOKS.filter(hit);
+  const todo = BOOKS.filter(b=>!b.m).length;
+  $("stats").textContent = `📚 馆藏 ${BOOKS.length} 篇`
+    + (todo ? ` · 📝 ${todo} 篇待编目` : "")
+    + (kw ? ` · 搜到 ${shown.length} 篇` : "");
   $("list").innerHTML = shown.map(b=>{
-    const p = parseName(b.name);
-    const tags = p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("");
     const kb = (b.size/1024).toFixed(0);
-    return `<button class="book" onclick="goRead('${encodeURIComponent(b.name)}')">
-      ${tags?`<div class="tags">${tags}</div>`:""}
-      <div class="title">${esc(p.title)}</div>
+    return `<div class="book" onclick="goRead('${encodeURIComponent(b.name)}')">
+      <div>${badgesOf(b)}</div>
+      <div class="title">${esc(titleOf(b))}</div>
+      ${b.m&&b.m.author?`<div class="author">✍️ ${esc(b.m.author)}</div>`:""}
+      ${typeTagsOf(b)}
       <div class="meta">约 ${(kb/1.4).toFixed(0)} 千字 · ${kb} KB</div>
-    </button>`;
+      <a class="dl" href="./${encodeURIComponent(b.name)}" download
+         onclick="event.stopPropagation()">⬇️ 下载</a>
+    </div>`;
   }).join("") || `<div class="center">🕳️ 书架空空如也<br>（或者没搜到呀）</div>`;
 }
 
-async function goRead(enc){
-  location.hash = "#/read/" + enc;
-  showReader(enc);
+function searchTag(t){
+  goList();
+  $("search").value = t;
+  renderList();
 }
+
+async function goRead(enc){ location.hash = "#/read/" + enc; }
+
 async function showReader(enc){
   const name = decodeURIComponent(enc);
-  const p = parseName(name);
+  const b = NAME2BOOK[name] || { name, size:0, m:null };
   $("listView").style.display="none";
   $("readView").style.display="block";
   window.scrollTo(0,0);
-  $("rTitle").textContent = p.title;
-  $("rMeta").innerHTML = p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("");
+  $("rTitle").textContent = titleOf(b);
+  let meta = [];
+  if(b.m && b.m.author) meta.push("✍️ " + esc(b.m.author));
+  if(b.size) meta.push("约 " + (b.size/1024/1.4).toFixed(0) + " 千字");
+  $("rMeta").innerHTML = meta.join(" · ");
+  $("rTags").innerHTML = badgesOf(b) + typeTagsOf(b)
+    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download>⬇️ 下载 TXT</a>`;
+  let rel = "";
+  if(b.m && b.m.parent){
+    const p = NAME2BOOK[b.m.parent];
+    rel += p
+      ? `<div class="rel">📎 本篇为番外，正文：<a href="#/read/${encodeURIComponent(p.name)}">《${esc(titleOf(p))}》</a></div>`
+      : `<div class="rel">🔗 正文《${esc(b.m.parent)}》未找到，请检查 books.csv 里的文件名是否一字不差</div>`;
+  }
+  const kids = BOOKS.filter(x => x.m && x.m.parent === name);
+  if(kids.length){
+    rel += `<div class="rel">🧩 本篇有番外：` + kids.map(k=>
+      `<a href="#/read/${encodeURIComponent(k.name)}">《${esc(titleOf(k))}》</a>`).join("、") + `</div>`;
+  }
+  $("rRel").innerHTML = rel;
   $("content").innerHTML = `<div class="center">🐻🐰 正在搬文…</div>`;
   try{
     let buf;
@@ -175,11 +273,11 @@ async function showReader(enc){
 function goList(){ location.hash = ""; }
 function route(){
   const m = location.hash.match(/^#\/read\/(.+)$/);
-  if(m){ showReader(m[1]); }
+  if(m && NAME2BOOK[decodeURIComponent(m[1])]){ showReader(m[1]); }
   else{ $("readView").style.display="none"; $("listView").style.display="block"; }
 }
 
-function esc(s){ return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 let fs = +(localStorage.getItem("bbfs")||18);
 function fontStep(d){ fs=Math.min(26,Math.max(14,fs+d)); localStorage.setItem("bbfs",fs); $("content").style.fontSize=fs+"px"; }
 function applyNight(){
@@ -193,9 +291,7 @@ window.addEventListener("hashchange", route);
 
 applyNight();
 $("content").style.fontSize = fs+"px";
-loadBooks();
-route();
+loadAll();
 </script>
 </body>
 </html>
-
