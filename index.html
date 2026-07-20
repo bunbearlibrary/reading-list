@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🐻🐰lib</title>
+<title>YJlib</title>
 <style>
   :root{
     --bg:#fff7ee; --card:#ffffff; --ink:#5c4033; --soft:#a5826a;
@@ -292,7 +292,7 @@ function renderList(){
       ${typeTagsOf(b)}
       <div class="meta">约 ${(kb/1.4).toFixed(0)} 千字 · ${kb} KB</div>
       <a class="dl" href="./${encodeURIComponent(b.name)}" download
-         onclick="event.stopPropagation()">↓ 下载</a>
+         onclick="event.stopPropagation()">下载</a>
     </div>`;
   }).join("") || `<div class="center">🕳️ 书架空空如也<br>（或者没搜到呀）</div>`;
   const remain = shown.length - page.length;
@@ -344,7 +344,7 @@ async function showReader(enc){
   if(b.size) meta.push("约 " + (b.size/1024/1.4).toFixed(0) + " 千字");
   $("rMeta").innerHTML = meta.join(" · ");
   $("rTags").innerHTML = badgesOf(b) + typeTagsOf(b)
-    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download>↓ 下载 TXT</a>`;
+    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download>下载 TXT</a>`;
   let rel = "";
   if(b.m && b.m.parent){
     const p = NAME2BOOK[b.m.parent];
