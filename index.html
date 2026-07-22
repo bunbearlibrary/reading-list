@@ -84,6 +84,15 @@
   #readMore{ text-align:center; padding:10px 0 6px; }
   #readMore .prog{ font-size:12px; color:var(--soft); margin-top:8px; }
   .backTop{ text-align:center; margin-top:40px; }
+/* 回到顶部 / 回到底部 按钮 */
+.floatBtns{ position:fixed; right:14px; bottom:20px; z-index:50; display:flex; flex-direction:column; gap:10px; }
+.floatBtn{ width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+  box-shadow:0 3px 12px rgba(140,95,55,.2); transition:transform .15s, opacity .2s;
+  display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; opacity:0.5;}
+.floatBtn.topBtn{ background:var(--orange); }
+.floatBtn.bottomBtn{ background:var(--green); }
+.floatBtn:hover{ opacity:.85; }
+.floatBtn:active{ transform:scale(.92); }
 </style>
 <base target="_blank">
 </head>
@@ -106,7 +115,7 @@
       <button id="nightBtn" title="夜间模式">🌙</button>
     </div>
     <div class="statline">
-      <div class="stats" id="stats">正在清点藏书…</div>
+      <div class="stats" id="stats">馆长正在清点藏书…</div>
       <div class="sortbar" id="sortBar" style="display:none">
         <button class="sbtn" id="sortDateBtn" onclick="setSort('date')">🕐 最新</button>
         <button class="sbtn" id="sortNameBtn" onclick="setSort('name')">🔤 篇名</button>
@@ -137,10 +146,6 @@
     </div>
     <div class="backTop"><button class="rbtn" onclick="goList()">← 回书架</button></div>
   </div>
-    <div style="text-align:center; color:var(--soft); font-size:12px; padding:30px 0 10px; opacity:.7;">
-      🚫 禁止外传 · 仅供试阅 · 谢谢配合 😘
-  </div>
-</div><!-- .wrap -->
 </div>
 
 <script>
@@ -409,5 +414,11 @@ applyNight();
 $("content").style.fontSize = fs+"px";
 loadAll();
 </script>
+<!-- 回到顶部 / 回到底部 -->
+<div class="floatBtns">
+  <button class="floatBtn topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">&#9650;</button>
+  <button class="floatBtn bottomBtn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="回到底部">&#9660;</button>
+</div>
 </body>
 </html>
+
