@@ -230,7 +230,7 @@ async function loadAll(){
   try{
     const [listR, csvR] = await Promise.all([
       fetch(`https://api.github.com/repos/${REPO}/contents?ref=${BRANCH}`),
-      fetch("./books.csv?t=" + Date.now())
+      fetch("./00-books.csv?t=" + Date.now())
     ]);
     if(!listR.ok) throw new Error("api");
     const items = await listR.json();
@@ -421,4 +421,3 @@ loadAll();
 </div>
 </body>
 </html>
-
