@@ -95,6 +95,8 @@
 .floatBtn:active{ transform:scale(.92); }
 </style>
 <base target="_blank">
+<!-- ▼▼▼ 下载统计：把 YOURNAME 换成你在 goatcounter.com 注册的站点名 ▼▼▼ -->
+<script data-goatcounter="https://yjlib.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="deco d1">🐻</div><div class="deco d2">🐰</div>
@@ -301,7 +303,7 @@ function renderList(){
       ${typeTagsOf(b)}
       <div class="meta">约 ${(kb/1.4).toFixed(0)} 千字 · ${kb} KB</div>
       <a class="dl" href="./${encodeURIComponent(b.name)}" download
-         onclick="event.stopPropagation()">下载</a>
+         onclick="event.stopPropagation();trackDL('${esc(b.name)}')">下载</a>
     </div>`;
   }).join("") || `<div class="center">🕳️ 书架空空如也<br>（或者没搜到呀）</div>`;
   const remain = shown.length - page.length;
@@ -353,7 +355,7 @@ async function showReader(enc){
   if(b.size) meta.push("约 " + (b.size/1024/1.4).toFixed(0) + " 千字");
   $("rMeta").innerHTML = meta.join(" · ");
   $("rTags").innerHTML = badgesOf(b) + typeTagsOf(b)
-    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download>下载 TXT</a>`;
+    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download onclick="trackDL('${esc(name)}')">下载 TXT</a>`;
   let rel = "";
   if(b.m && b.m.parent){
     const p = NAME2BOOK[b.m.parent];
@@ -385,6 +387,7 @@ async function showReader(enc){
     READ.paras = text.split("\n");
     READ.pi = 0; READ.chars = 0;
     READ.totalChars = READ.paras.reduce((s,l)=>s+l.length, 0);
+    trackRead(name);
     $("content").innerHTML = "";
     renderNextChunk();
   }catch(e){
@@ -398,6 +401,17 @@ function route(){
   else{ $("readView").style.display="none"; $("listView").style.display="block"; }
 }
 
+/* 下载/阅读统计上报 */
+function trackDL(name){
+  try{ if(window.goatcounter && goatcounter.count)
+    goatcounter.count({ path: "/下载/" + name, title: "下载 " + name, event: true });
+  }catch(e){}
+}
+function trackRead(name){
+  try{ if(window.goatcounter && goatcounter.count)
+    goatcounter.count({ path: "/阅读/" + name, title: "阅读 " + name, event: true });
+  }catch(e){}
+}
 function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 let fs = +(localStorage.getItem("bbfs")||18);
 function fontStep(d){ fs=Math.min(26,Math.max(14,fs+d)); localStorage.setItem("bbfs",fs); $("content").style.fontSize=fs+"px"; }
