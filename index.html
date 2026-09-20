@@ -29,17 +29,31 @@
   header h1{ font-size:32px; letter-spacing:2px; }
   header p{ margin-top:8px; color:var(--soft); font-size:15px; letter-spacing:1px; }
   header p.upd{ margin-top:4px; font-size:12px; opacity:.85; }
+  .banner{ display:flex; gap:8px; align-items:flex-start; background:#fdeef2; color:var(--pink-deep);
+    border:1px dashed var(--pink); border-radius:14px; padding:10px 16px; font-size:14px;
+    line-height:1.7; margin:0 0 8px; }
+  body.night .banner{ background:#43302f; }
+  .banner .ic{ flex:none; font-size:15px; margin-top:4px; }
+  .banner span{ flex:1; }
   .toolbar{ display:flex; gap:10px; margin:14px 0 6px; }
-  #search{ flex:1; padding:12px 18px; border-radius:999px; border:2px solid var(--line);
+  .searchWrap{ position:relative; flex:1; display:flex; }
+  .sic{ position:absolute; left:15px; top:50%; transform:translateY(-50%);
+    width:17px; height:17px; color:var(--soft); pointer-events:none;
+    fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  #search{ flex:1; padding:12px 18px 12px 42px; border-radius:999px; border:2px solid var(--line);
     background:var(--card); color:var(--ink); font-size:15px; outline:none; transition:border-color .2s; }
   #search:focus{ border-color:var(--pink); }
+  #search:focus + .sic, .searchWrap:focus-within .sic{ color:var(--pink); }
+  .ic{ width:1.05em; height:1.05em; vertical-align:-.16em; fill:none;
+    stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   #nightBtn{ border:2px solid var(--line); background:var(--card); border-radius:999px;
     width:46px; font-size:18px; cursor:pointer; }
   .statline{ display:flex; align-items:center; gap:8px; padding:4px 8px 12px; }
   .stats{ flex:1; color:var(--soft); font-size:13px; }
   .sortbar{ display:flex; gap:6px; }
   .sbtn{ border:2px solid var(--line); background:var(--card); color:var(--soft);
-    border-radius:999px; padding:4px 12px; font-size:12px; cursor:pointer; font-family:inherit; }
+    border-radius:999px; padding:4px 12px; font-size:12px; cursor:pointer; font-family:inherit;
+    display:inline-flex; align-items:center; gap:4px; }
   .sbtn.on{ border-color:var(--pink); color:var(--pink-deep); background:#fdeef2; }
   body.night .sbtn.on{ background:#43302f; }
   .bd{ display:inline-block; font-size:12px; border-radius:999px; padding:2px 10px; margin:0 6px 4px 0; }
@@ -75,7 +89,8 @@
   .readerBar{ position:sticky; top:0; z-index:5; display:flex; gap:8px; align-items:center;
     background:var(--bg); padding:10px 0; border-bottom:1px dashed var(--line); }
   .rbtn{ border:2px solid var(--line); background:var(--card); color:var(--ink);
-    border-radius:999px; padding:8px 14px; font-size:14px; cursor:pointer; }
+    border-radius:999px; padding:8px 14px; font-size:14px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:5px; }
   .readerTitle{ font-size:22px; font-weight:700; margin:22px 0 6px; line-height:1.6; }
   .readerMeta{ color:var(--soft); font-size:13px; margin-bottom:6px; }
   #content{ font-size:18px; line-height:2; letter-spacing:.3px; margin-top:14px; }
@@ -91,11 +106,41 @@
   display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; opacity:0.5;}
 .floatBtn.topBtn{ background:var(--orange); }
 .floatBtn.bottomBtn{ background:var(--green); }
+.floatBtn.diceBtn{ background:var(--pink-deep); }
 .floatBtn:hover{ opacity:.85; }
 .floatBtn:active{ transform:scale(.92); }
+.floatBtn.diceBtn.rolling{ animation:diceSpin .45s linear infinite; opacity:.95; }
+@keyframes diceSpin{ 0%{transform:rotate(0) scale(1);} 50%{transform:rotate(180deg) scale(1.18);} 100%{transform:rotate(360deg) scale(1);} }
+/* 随机推荐弹窗 */
+.rollMask{ position:fixed; inset:0; z-index:99; background:rgba(60,40,30,.45);
+  display:flex; align-items:center; justify-content:center; padding:20px; }
+.rollCard{ position:relative; background:var(--card); border:1px solid var(--line);
+  border-radius:20px; max-width:420px; width:100%; padding:24px 20px 18px; text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,.25); animation:popIn .25s ease; }
+@keyframes popIn{ 0%{transform:scale(.7); opacity:0;} 60%{transform:scale(1.05); opacity:1;} 100%{transform:scale(1); opacity:1;} }
+.rollClose{ position:absolute; top:10px; right:12px; border:none; background:none;
+  color:var(--soft); font-size:16px; cursor:pointer; }
+.rollCard .rollDice{ font-size:17px; font-weight:800; letter-spacing:2px; margin-bottom:8px; }
+.rollCard .rollDice .gt{
+  background:linear-gradient(90deg,var(--pink-deep),var(--orange),var(--purple));
+  -webkit-background-clip:text; background-clip:text; color:transparent; }
+.rollNote{ display:table; margin:10px auto 0; font-size:13px; font-weight:600; color:var(--pink-deep);
+  background:#fdeef2; border-radius:12px; padding:6px 12px; }
+body.night .rollNote{ background:#43302f; }
+.rollNote.devil{ color:#fff; background:var(--purple); }
+body.night .rollNote.devil{ background:#7a5c96; }
+#rollBody.settle{ animation:settle .38s cubic-bezier(.34,1.56,.64,1); }
+@keyframes settle{ 0%{transform:scale(.55); opacity:0;} 100%{transform:scale(1); opacity:1;} }
+#confettiCv{ position:fixed; inset:0; width:100vw; height:100vh; z-index:200;
+  pointer-events:none; display:none; }
+.rollCard .rt{ font-size:19px; font-weight:700; margin:8px 0 4px; line-height:1.6; }
+.rollCard .ra{ color:var(--soft); font-size:13px; margin-bottom:6px; }
+.rollCard .rmeta2{ color:var(--soft); font-size:12px; margin-top:8px; }
+.rollCard .rbtns{ margin-top:16px; display:flex; gap:10px; justify-content:center; }
+.rollCard .dl2{ border:none; cursor:pointer; font-family:inherit; margin:0; }
 </style>
 <base target="_blank">
-<!-- ▼▼▼ 下载统计：把 YOURNAME 换成你在 goatcounter.com 注册的站点名 ▼▼▼ -->
+<!-- ▼▼▼ 下载统计： ▼▼▼ -->
 <script data-goatcounter="https://yjlib.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
@@ -111,16 +156,24 @@
     <p class="upd" id="lastUpd" style="display:none"></p>
   </header>
 
+  <div class="banner" id="banner" style="display:none">
+    <svg class="ic" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+    <span id="bannerTxt"></span>
+  </div>
+
   <div id="listView">
     <div class="toolbar">
-      <input id="search" type="search" placeholder="🔍 搜索篇名、作者或标签…">
+      <div class="searchWrap">
+        <svg class="sic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20.5 20.5-4.6-4.6"/></svg>
+        <input id="search" type="search" placeholder="搜索篇名、作者或标签…">
+      </div>
       <button id="nightBtn" title="夜间模式">🌙</button>
     </div>
     <div class="statline">
       <div class="stats" id="stats">🧸正在清点藏书…</div>
       <div class="sortbar" id="sortBar" style="display:none">
-        <button class="sbtn" id="sortDateBtn" onclick="setSort('date')">🕐 最新</button>
-        <button class="sbtn" id="sortNameBtn" onclick="setSort('name')">🔤 篇名</button>
+        <button class="sbtn" id="sortDateBtn" onclick="setSort('date')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>最新</button>
+        <button class="sbtn" id="sortNameBtn" onclick="setSort('name')"><svg class="ic" viewBox="0 0 24 24"><path d="M7 4v12"/><path d="m3.8 12.8 3.2 3.2 3.2-3.2"/><text x="12.5" y="9.5" font-size="8" font-weight="700" fill="currentColor" stroke="none">A</text><text x="15.5" y="19.5" font-size="8" font-weight="700" fill="currentColor" stroke="none">Z</text></svg>篇名</button>
       </div>
     </div>
     <div id="list"></div>
@@ -132,7 +185,7 @@
 
   <div id="readView" style="display:none">
     <div class="readerBar">
-      <button class="rbtn" onclick="goList()">← 回书架</button>
+      <button class="rbtn" onclick="goList()"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>回书架</button>
       <span style="flex:1"></span>
       <button class="rbtn" onclick="fontStep(-1)">A-</button>
       <button class="rbtn" onclick="fontStep(1)">A+</button>
@@ -146,7 +199,7 @@
       <button class="rbtn" onclick="renderNextChunk()">加载更多 ▼</button>
       <div class="prog" id="readProg"></div>
     </div>
-    <div class="backTop"><button class="rbtn" onclick="goList()">← 回书架</button></div>
+    <div class="backTop"><button class="rbtn" onclick="goList()"><svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>回书架</button></div>
   </div>
 </div>
 
@@ -157,6 +210,26 @@ const BRANCH = "main";
 const PAGE_SIZE = 50;      /* 书架每页显示多少篇 */
 const CHUNK_CHARS = 13000; /* 正文每次渲染的字符数（≈40KB） */
 /* ==================== */
+/* 顶部横幅：在仓库根目录放一个 00-banner.txt，写了内容就显示在书架顶端，
+   文件留空或删除则自动隐藏。支持多行文本。 */
+
+/* ====== 🥚 彩蛋图鉴 ======
+ * 本站埋藏的彩蛋一览（都藏在右下角 🎲「同人抽抽乐」里）：
+ *
+ * 【彩带庆祝】每次抽中一篇文章，屏幕中央喷出彩带（confettiBurst）
+ *
+ * 【💞 有缘彩蛋】连续两次抽到同一位作者
+ *   → 卡片出现「又是这位太太，你们今天很有缘！」
+ *
+ * 【😈 恶魔彩蛋】连续抽 N 次都不点「就这本了」进去看文（点一次就清零）：
+ *   10 次      → 😈 不要再抽了！
+ *   15 次      → 😈😈 说了不要再抽了！！
+ *   20 次      → 😈😈😈 都要抽出火星子了！！快去看文！
+ *   30 次及以上 → 🫠🫠🫠🫠 随便你啦！
+ *
+ * 【防重复机制】最近抽过的 10 篇不会重复抽到（存在 localStorage "bbrecent"），
+ *   全部抽过一轮后自动重置
+ * ======================== */
 
 let BOOKS = [];
 let NAME2BOOK = {};
@@ -164,6 +237,12 @@ let shownCount = PAGE_SIZE;
 let sortMode = localStorage.getItem("bbsort") || "date";
 let READ = { paras:[], pi:0, chars:0, totalChars:0 };
 const $ = id => document.getElementById(id);
+/* 内联矢量图标（currentColor，随昼夜主题自动变色） */
+const IC_BOOK = `<svg class="ic" viewBox="0 0 24 24"><path d="M2.5 4.5h6a3.5 3.5 0 0 1 3.5 3.5v11a2.5 2.5 0 0 0-2.5-2.5h-7z"/><path d="M21.5 4.5h-6a3.5 3.5 0 0 0-3.5 3.5v11a2.5 2.5 0 0 1 2.5-2.5h7z"/></svg>`;
+const IC_CLIP = `<svg class="ic" viewBox="0 0 24 24"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`;
+const IC_PUZZLE = `<svg class="ic" viewBox="0 0 24 24"><path d="M4.5 19.5v-13h4.7a2.8 2.8 0 0 1 5.6 0h4.7v13z"/><path d="M12 6.5v13"/></svg>`;
+const IC_LINK = `<svg class="ic" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`;
+const IC_PEN = `<svg class="ic" viewBox="0 0 24 24"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>`;
 
 function decodeBuf(buf){
   const b = new Uint8Array(buf);
@@ -230,14 +309,22 @@ function paintSortBtns(){
 
 async function loadAll(){
   try{
-    const [listR, csvR] = await Promise.all([
+    const [listR, csvR, bnR] = await Promise.all([
       fetch(`https://api.github.com/repos/${REPO}/contents?ref=${BRANCH}`),
-      fetch("./00-books.csv?t=" + Date.now())
+      fetch("./00-books.csv?t=" + Date.now()),
+      fetch("./00-banner.txt?t=" + Date.now())   /* 顶部横幅：文件存在且有内容才显示 */
     ]);
     if(!listR.ok) throw new Error("api");
     const items = await listR.json();
     const META = csvR.ok ? parseCSV(decodeBuf(await csvR.arrayBuffer())) : {};
-    BOOKS = items.filter(i => i.type==="file" && /\.txt$/i.test(i.name))
+    if(bnR.ok){
+      const txt = decodeBuf(await bnR.arrayBuffer()).trim();
+      if(txt){
+        $("bannerTxt").innerHTML = esc(txt).replace(/\n/g,"<br>");
+        $("banner").style.display = "";
+      }
+    }
+    BOOKS = items.filter(i => i.type==="file" && /\.txt$/i.test(i.name) && i.name !== "00-banner.txt")
                  .map(i => ({ name:i.name, size:i.size, m:META[i.name]||null }));
     const dates = BOOKS.map(b=>b.m&&b.m.date).filter(Boolean);
     if(dates.length){
@@ -274,7 +361,7 @@ function badgesOf(b){
   let s = cpTags(b).map(t=>`<span class="bd bd-cp">${esc(t)}</span>`).join("");
   s += statusBadge(b.m);
   if(b.m && b.m.parent) s += `<span class="bd bd-ex">番外</span>`;
-  if(!b.m) s += `<span class="bd bd-todo">📝 待编目</span>`;
+  if(!b.m) s += `<span class="bd bd-todo">${IC_PEN} 待编目</span>`;
   return s;
 }
 function typeTagsOf(b){
@@ -291,15 +378,15 @@ function renderList(){
   const shown = BOOKS.filter(hit);
   const page = shown.slice(0, shownCount);
   const todo = BOOKS.filter(b=>!b.m).length;
-  $("stats").textContent = `📚 馆藏 ${BOOKS.length} 篇`
-    + (todo ? ` · 📝 ${todo} 篇待编目` : "")
+  $("stats").innerHTML = `${IC_BOOK} 馆藏 ${BOOKS.length} 篇`
+    + (todo ? ` · ${IC_PEN} ${todo} 篇待编目` : "")
     + (kw ? ` · 搜到 ${shown.length} 篇` : "");
   $("list").innerHTML = page.map(b=>{
     const kb = (b.size/1024).toFixed(0);
     return `<div class="book" onclick="goRead('${encodeURIComponent(b.name)}')">
       <div>${badgesOf(b)}</div>
       <div class="title">${esc(titleOf(b))}</div>
-      ${b.m&&b.m.author?`<div class="author">✍️ ${esc(b.m.author)}</div>`:""}
+      ${b.m&&b.m.author?`<div class="author">作者：${esc(b.m.author)}</div>`:""}
       ${typeTagsOf(b)}
       <div class="meta">约 ${(kb/1.4).toFixed(0)} 千字 · ${kb} KB</div>
       <a class="dl" href="./${encodeURIComponent(b.name)}" download
@@ -316,6 +403,7 @@ function moreBooks(){
 }
 
 function searchTag(t){
+  closeRoll();
   goList();
   $("search").value = t;
   shownCount = PAGE_SIZE;
@@ -323,6 +411,122 @@ function searchTag(t){
 }
 
 async function goRead(enc){ location.hash = "#/read/" + enc; }
+
+/* ====== 🎲 随机推荐 ====== */
+let rolling = false;
+function rollPool(){
+  const cat = BOOKS.filter(b=>b.m);   /* 只抽已编目的 */
+  return cat.length ? cat : BOOKS;
+}
+function pickOne(){
+  const pool = rollPool();
+  let recent = [];
+  try{ recent = JSON.parse(localStorage.getItem("bbrecent")||"[]"); }catch(e){}
+  let cand = pool.filter(b=>!recent.includes(b.name));
+  if(!cand.length){ recent = []; cand = pool; }   /* 全抽过一轮就重置 */
+  const b = cand[Math.floor(Math.random()*cand.length)];
+  const cap = Math.max(1, Math.min(10, pool.length-1));  /* 记住最近10篇不重复 */
+  recent.push(b.name);
+  while(recent.length > cap) recent.shift();
+  try{ localStorage.setItem("bbrecent", JSON.stringify(recent)); }catch(e){}
+  return b;
+}
+let rollStreak = 0;        /* 连抽未读计数：点「就这本了」才清零 */
+let lastRollAuthor = null; /* 上一抽的作者，用于有缘彩蛋 */
+function rollCardHTML(b, sameAuthor, streak){
+  const kb = (b.size/1024).toFixed(0);
+  let note = "";
+  if(sameAuthor) note += `<div class="rollNote">💞 又是这位太太，你们今天很有缘！</div>`;
+  if(streak >= 10){
+    const lvl = streak >= 30 ? 4 : streak >= 20 ? 3 : streak >= 15 ? 2 : 1;
+    const msg = lvl === 4 ? "随便你啦！"
+              : lvl === 3 ? "都要抽出火星子了！！快去看文！"
+              : lvl === 2 ? "说了不要再抽了！！"
+              : "不要再抽了！";
+    const emo = lvl === 4 ? "🫠🫠🫠🫠" : "😈".repeat(lvl);
+    note += `<div class="rollNote devil">${emo} ${msg}</div>`;
+  }
+  return `<div class="rollDice">🎲 <span class="gt">同人抽抽乐</span> 🎲</div>
+    <div>${badgesOf(b)}</div>
+    <div class="rt">${esc(titleOf(b))}</div>
+    ${b.m&&b.m.author?`<div class="ra">作者：${esc(b.m.author)}</div>`:""}
+    ${typeTagsOf(b)}
+    <div class="rmeta2">约 ${(kb/1.4).toFixed(0)} 千字 · ${kb} KB</div>
+    ${note}
+    <div class="rbtns">
+      <button class="dl2" onclick="rollGo('${encodeURIComponent(b.name)}')">就这本了</button>
+      <button class="rbtn" onclick="rollAgain()">再抽一次</button>
+    </div>`;
+}
+/* 彩带庆祝 */
+function confettiBurst(){
+  const cv = $("confettiCv"), ctx = cv.getContext("2d");
+  const W = innerWidth || document.documentElement.clientWidth || 800;
+  const H = innerHeight || document.documentElement.clientHeight || 600;
+  cv.width = W; cv.height = H;
+  cv.style.display = "block";
+  const colors = ["#ef7d9a","#f7a8b8","#e8a04c","#7fb685","#b48ec9","#c08552"];
+  const parts = [];
+  const cx = W/2, cy = H*0.42;
+  for(let i=0;i<130;i++){
+    const a = Math.random()*Math.PI*2, v = 4+Math.random()*9;
+    parts.push({ x:cx, y:cy, vx:Math.cos(a)*v, vy:Math.sin(a)*v-5,
+      s:4+Math.random()*5, c:colors[i%colors.length],
+      r:Math.random()*Math.PI, vr:(Math.random()-.5)*.3,
+      circle:Math.random()<.4, life:1 });
+  }
+  let t0 = performance.now();
+  requestAnimationFrame(function tick(t){
+    const dt = Math.min(3, (t-t0)/16.7); t0 = t;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    let alive = false;
+    for(const p of parts){
+      p.vy += .16*dt; p.vx *= .995; p.x += p.vx*dt; p.y += p.vy*dt;
+      p.r += p.vr*dt; p.life -= .011*dt;
+      if(p.life<=0 || p.y>cv.height+24) continue;
+      alive = true;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+      ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.c;
+      if(p.circle){ ctx.beginPath(); ctx.arc(0,0,p.s/2.4,0,7); ctx.fill(); }
+      else ctx.fillRect(-p.s/2, -p.s/4, p.s, p.s/2);
+      ctx.restore();
+    }
+    if(alive) requestAnimationFrame(tick);
+    else{ ctx.clearRect(0,0,cv.width,cv.height); cv.style.display = "none"; }
+  });
+}
+
+function openRoll(){
+  if(rolling || !BOOKS.length) return;
+  rolling = true;
+  $("rollMask").style.display = "flex";
+  $("diceBtn").classList.add("rolling");
+  const body = $("rollBody");
+  body.classList.remove("settle");
+  const pool = rollPool();
+  const shuffle = setInterval(()=>{   /* 洗牌动画：标题飞速轮换 */
+    const b = pool[Math.floor(Math.random()*pool.length)];
+    body.innerHTML = `<div class="center" style="padding:34px 0">🎲<br>${esc(titleOf(b))}</div>`;
+  }, 90);
+  setTimeout(()=>{
+    clearInterval(shuffle);
+    const b = pickOne();
+    const same = !!(b.m && b.m.author && b.m.author === lastRollAuthor);
+    lastRollAuthor = (b.m && b.m.author) || null;
+    rollStreak++;
+    body.innerHTML = rollCardHTML(b, same, rollStreak);
+    body.classList.add("settle");
+    confettiBurst();   /* 抽中！彩带庆祝 */
+    $("diceBtn").classList.remove("rolling");
+    rolling = false;
+  }, 900);
+}
+function rollAgain(){ if(!rolling) openRoll(); }
+function rollGo(enc){ rollStreak = 0; closeRoll(); goRead(enc); }
+function closeRoll(){ $("rollMask").style.display = "none"; }
+/* ==================== */
 
 /* 正文分页渲染：保留原文所有换行和空行 */
 function renderNextChunk(){
@@ -351,7 +555,7 @@ async function showReader(enc){
   window.scrollTo(0,0);
   $("rTitle").textContent = titleOf(b);
   let meta = [];
-  if(b.m && b.m.author) meta.push("✍️ " + esc(b.m.author));
+  if(b.m && b.m.author) meta.push("作者：" + esc(b.m.author));
   if(b.size) meta.push("约 " + (b.size/1024/1.4).toFixed(0) + " 千字");
   $("rMeta").innerHTML = meta.join(" · ");
   $("rTags").innerHTML = badgesOf(b) + typeTagsOf(b)
@@ -360,12 +564,12 @@ async function showReader(enc){
   if(b.m && b.m.parent){
     const p = NAME2BOOK[b.m.parent];
     rel += p
-      ? `<div class="rel">📎 本篇为番外，正文：<a target="_self" href="#/read/${encodeURIComponent(p.name)}">《${esc(titleOf(p))}》</a></div>`
-      : `<div class="rel">🔗 正文《${esc(b.m.parent)}》未找到，请检查 books.csv 里的文件名是否一字不差</div>`;
+      ? `<div class="rel">${IC_CLIP} 本篇为番外，正文：<a target="_self" href="#/read/${encodeURIComponent(p.name)}">《${esc(titleOf(p))}》</a></div>`
+      : `<div class="rel">${IC_LINK} 正文《${esc(b.m.parent)}》未找到，请检查 books.csv 里的文件名是否一字不差</div>`;
   }
   const kids = BOOKS.filter(x => x.m && x.m.parent === name);
   if(kids.length){
-    rel += `<div class="rel">🧩 本篇有番外：` + kids.map(k=>
+    rel += `<div class="rel">${IC_PUZZLE} 本篇有番外：` + kids.map(k=>
       `<a target="_self" href="#/read/${encodeURIComponent(k.name)}">《${esc(titleOf(k))}》</a>`).join("、") + `</div>`;
   }
   $("rRel").innerHTML = rel;
@@ -428,10 +632,19 @@ applyNight();
 $("content").style.fontSize = fs+"px";
 loadAll();
 </script>
-<!-- 回到顶部 / 回到底部 -->
+<!-- 回到顶部 / 回到底部 / 随机推荐 -->
 <div class="floatBtns">
+  <button class="floatBtn diceBtn" id="diceBtn" onclick="openRoll()" title="同人抽抽乐 · 随机抽一篇">🎲</button>
   <button class="floatBtn topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">&#9650;</button>
   <button class="floatBtn bottomBtn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" title="回到底部">&#9660;</button>
 </div>
+<!-- 随机推荐弹窗 -->
+<div class="rollMask" id="rollMask" style="display:none" onclick="if(event.target===this)closeRoll()">
+  <div class="rollCard">
+    <button class="rollClose" onclick="closeRoll()">✕</button>
+    <div id="rollBody"></div>
+  </div>
+</div>
+<canvas id="confettiCv"></canvas>
 </body>
 </html>
