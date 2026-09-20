@@ -35,6 +35,9 @@
   body.night .banner{ background:#43302f; }
   .banner .ic{ flex:none; font-size:15px; margin-top:4px; }
   .banner span{ flex:1; }
+  .bannerClose{ flex:none; border:none; background:none; color:inherit; cursor:pointer;
+    font-size:13px; opacity:.65; padding:2px 0 0 6px; font-family:inherit; }
+  .bannerClose:hover{ opacity:1; }
   .toolbar{ display:flex; gap:10px; margin:14px 0 6px; }
   .searchWrap{ position:relative; flex:1; display:flex; }
   .sic{ position:absolute; left:15px; top:50%; transform:translateY(-50%);
@@ -159,6 +162,7 @@ body.night .rollNote.devil{ background:#7a5c96; }
   <div class="banner" id="banner" style="display:none">
     <svg class="ic" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
     <span id="bannerTxt"></span>
+    <button class="bannerClose" onclick="closeBanner()" title="关闭">✕</button>
   </div>
 
   <div id="listView">
@@ -233,6 +237,11 @@ const CHUNK_CHARS = 13000; /* 正文每次渲染的字符数（≈40KB） */
 
 let BOOKS = [];
 let NAME2BOOK = {};
+let BANNER_TXT = "";   /* 当前横幅原文，关闭时记住它 */
+function closeBanner(){
+  $("banner").style.display = "none";
+  try{ localStorage.setItem("bbbanner_off", BANNER_TXT); }catch(e){}
+}
 let shownCount = PAGE_SIZE;
 let sortMode = localStorage.getItem("bbsort") || "date";
 let READ = { paras:[], pi:0, chars:0, totalChars:0 };
@@ -319,7 +328,9 @@ async function loadAll(){
     const META = csvR.ok ? parseCSV(decodeBuf(await csvR.arrayBuffer())) : {};
     if(bnR.ok){
       const txt = decodeBuf(await bnR.arrayBuffer()).trim();
-      if(txt){
+      /* 关过的旧横幅不再烦人；换了新内容会重新显示 */
+      if(txt && txt !== localStorage.getItem("bbbanner_off")){
+        BANNER_TXT = txt;
         $("bannerTxt").innerHTML = esc(txt).replace(/\n/g,"<br>");
         $("banner").style.display = "";
       }
