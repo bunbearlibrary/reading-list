@@ -29,6 +29,7 @@
   header h1{ font-size:32px; letter-spacing:2px; }
   header p{ margin-top:8px; color:var(--soft); font-size:15px; letter-spacing:1px; }
   header p.upd{ margin-top:4px; font-size:12px; opacity:.85; }
+  .festivalHero{ display:block; width:min(300px,72vw); margin:0 auto 6px; }
   .banner{ display:flex; gap:8px; align-items:flex-start; background:#fdeef2; color:var(--pink-deep);
     border:1px dashed var(--pink); border-radius:14px; padding:10px 16px; font-size:14px;
     line-height:1.7; margin:0 0 8px; }
@@ -154,6 +155,7 @@ body.night .rollNote.devil{ background:#7a5c96; }
 <div class="deco" style="top:80%;left:45%;font-size:26px;animation-delay:2.4s">🎀</div>
 <div class="wrap">
   <header>
+    <img id="festivalHero" class="festivalHero" src="./zhongqiu-hero.png" alt="中秋贺图" style="display:none" onerror="this.remove()">
     <h1>🐻 𝐋𝐈𝐁𝐑𝐀𝐑𝐘 🐰</h1>
     <p>◆ 复婚好吗，孩子总哭 ◆</p>
     <p class="upd" id="lastUpd" style="display:none"></p>
@@ -638,6 +640,14 @@ function applyNight(){
 $("nightBtn").onclick = ()=>{ localStorage.setItem("bbnight", document.body.classList.contains("night")?"0":"1"); applyNight(); };
 $("search").addEventListener("input", ()=>{ shownCount = PAGE_SIZE; renderList(); });
 window.addEventListener("hashchange", route);
+
+/* ====== 🎑 中秋限定头图 ======
+ * 中秋假期（2026-09-25 ~ 09-27）显示，2026-09-28 00:00（北京时间）起自动隐藏，无需再改动。
+ * 节后想彻底移除：删掉这段代码、header 里的 <img id="festivalHero">、仓库里的 zhongqiu-hero.png。 */
+if(Date.now() < +new Date("2026-09-28T00:00:00+08:00")){
+  const fh = $("festivalHero");
+  if(fh) fh.style.display = "";
+}
 
 applyNight();
 $("content").style.fontSize = fs+"px";
