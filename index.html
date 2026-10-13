@@ -24,11 +24,15 @@
   .deco.d1{ top:12%; left:6%; } .deco.d2{ top:22%; right:8%; animation-delay:1.2s; }
   .deco.d3{ bottom:14%; left:10%; animation-delay:2s; } .deco.d4{ bottom:20%; right:6%; animation-delay:.6s; }
   @keyframes float{ 0%,100%{transform:translateY(0) rotate(-6deg);} 50%{transform:translateY(-14px) rotate(6deg);} }
+  .deco.hxonly{ display:none; }
+  body.halloween .deco.hxonly{ display:block; }
   .wrap{ position:relative; z-index:1; max-width:720px; margin:0 auto; padding:24px 16px 60px; }
   header{ text-align:center; padding:28px 0 20px; }
   header h1{ font-size:32px; letter-spacing:2px; }
   header p{ margin-top:8px; color:var(--soft); font-size:15px; letter-spacing:1px; }
   header p.upd{ margin-top:4px; font-size:12px; opacity:.85; }
+  .hero{ display:block; width:min(300px,68%); margin:0 auto 6px;
+    filter:drop-shadow(0 6px 14px rgba(140,95,55,.2)); }
   .banner{ display:flex; gap:8px; align-items:flex-start; background:#fdeef2; color:var(--pink-deep);
     border:1px dashed var(--pink); border-radius:14px; padding:10px 16px; font-size:14px;
     line-height:1.7; margin:0 0 8px; }
@@ -114,6 +118,28 @@
 .floatBtn:active{ transform:scale(.92); }
 .floatBtn.diceBtn.rolling{ animation:diceSpin .45s linear infinite; opacity:.95; }
 @keyframes diceSpin{ 0%{transform:rotate(0) scale(1);} 50%{transform:rotate(180deg) scale(1.18);} 100%{transform:rotate(360deg) scale(1);} }
+/* 闪光渐变骰子按钮（用户指定：万圣节后也保留，所以不挂 halloween 开关） */
+.floatBtn.diceBtn{ background:linear-gradient(135deg,#f7a8b8,#e8a04c,#b48ec9,#7fb685,#f7a8b8);
+  background-size:400% 400%; animation:hxShift 2s ease infinite, hxGlow .9s ease-in-out infinite; }
+.floatBtn.diceBtn.rolling{ animation:diceSpin .45s linear infinite, hxGlow .9s ease-in-out infinite; }
+@keyframes hxShift{ 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
+@keyframes hxGlow{ 0%,100%{box-shadow:0 0 8px rgba(232,160,76,.7);} 50%{box-shadow:0 0 22px rgba(180,142,201,1);} }
+/* 万圣限定：主副标题呼吸闪烁 */
+body.halloween .hxline{ animation:hxBlink 2.2s ease-in-out infinite; }
+/* 万圣限定：彩色动态标题 + Trick or Treat 副标题
+   （background-clip:text 与 filter/动画同用会触发 Chromium 渲染 bug，
+     所以标题改成四色循环变色 + 微发光，效果同样会流动） */
+body.halloween .rollDice .gt{ background:none; -webkit-background-clip:border-box; background-clip:border-box;
+  animation:hxColor 4s linear infinite; }
+@keyframes hxColor{
+  0%{ color:#ef7d9a; text-shadow:0 0 6px rgba(239,125,154,.5); }
+  25%{ color:#e8a04c; text-shadow:0 0 6px rgba(232,160,76,.5); }
+  50%{ color:#b48ec9; text-shadow:0 0 6px rgba(180,142,201,.5); }
+  75%{ color:#7fb685; text-shadow:0 0 6px rgba(127,182,133,.5); }
+  100%{ color:#ef7d9a; text-shadow:0 0 6px rgba(239,125,154,.5); } }
+.hxSub{ font-size:12px; font-weight:600; letter-spacing:3px; color:var(--orange); margin:-2px 0 8px;
+  animation:hxBlink 1.8s ease-in-out infinite; }
+@keyframes hxBlink{ 0%,100%{opacity:.5;} 50%{opacity:1;} }
 /* 随机推荐弹窗 */
 .rollMask{ position:fixed; inset:0; z-index:99; background:rgba(60,40,30,.45);
   display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -147,15 +173,20 @@ body.night .rollNote.devil{ background:#7a5c96; }
 <script data-goatcounter="https://yjlib.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
-<div class="deco d1">🐻</div><div class="deco d2">🐰</div>
-<div class="deco d3">🥕</div><div class="deco d4">🍯</div>
+<div class="deco d1" data-d="d1">🐻</div><div class="deco d2">🐰</div>
+<div class="deco d3" data-d="d3">🥕</div><div class="deco d4" data-d="d4">🍯</div>
 <div class="deco" style="top:40%;left:3%;font-size:26px;animation-delay:.8s">🦔</div>
 <div class="deco" style="top:65%;right:4%;font-size:26px;animation-delay:1.6s">🐖</div>
-<div class="deco" style="top:80%;left:45%;font-size:26px;animation-delay:2.4s">🎀</div>
+<div class="deco" data-d="t80" style="top:80%;left:45%;font-size:26px;animation-delay:2.4s">🎀</div>
+<div class="deco hxonly" style="top:6%;left:44%;font-size:24px;animation-delay:1.9s">🕸️</div>
+<div class="deco hxonly" style="top:32%;right:13%;font-size:26px;animation-delay:2.8s">🧙‍♀️</div>
+<div class="deco hxonly" style="bottom:5%;left:24%;font-size:24px;animation-delay:3.4s">🍭</div>
+<div class="deco hxonly" style="top:52%;left:7%;font-size:26px;animation-delay:3s">🐻</div>
 <div class="wrap">
   <header>
+    <img class="hero" id="heroImg" src="./halloween-hero.png" alt="万圣限定：女巫小猪、南瓜刺猬和木乃伊刺猬" style="display:none">
     <h1>🐻 𝐋𝐈𝐁𝐑𝐀𝐑𝐘 🐰</h1>
-    <p>◆ 复婚好吗，孩子总哭 ◆</p>
+    <p class="hxline" id="tagline">◆ 复婚好吗，孩子总哭 ◆</p>
     <p class="upd" id="lastUpd" style="display:none"></p>
   </header>
 
@@ -214,6 +245,9 @@ const REPO  = "bunbearlibrary/reading-list";
 const BRANCH = "main";
 const PAGE_SIZE = 50;      /* 书架每页显示多少篇 */
 const CHUNK_CHARS = 13000; /* 正文每次渲染的字符数（≈40KB） */
+const HW_START = +new Date("2026-10-19");  /* 万圣限定上线时间 */
+const HW_END   = +new Date("2026-11-02");  /* 万圣限定时效：之后自动恢复原状 */
+function hwOn(){ return Date.now() >= HW_START && Date.now() < HW_END; }
 /* ==================== */
 /* 顶部横幅：在仓库根目录放一个 00-banner.txt，写了内容就显示在书架顶端，
    文件留空或删除则自动隐藏。支持多行文本。 */
@@ -239,6 +273,16 @@ const CHUNK_CHARS = 13000; /* 正文每次渲染的字符数（≈40KB） */
 let BOOKS = [];
 let NAME2BOOK = {};
 let BANNER_TXT = "";   /* 当前横幅原文，关闭时记住它 */
+/* 万圣限定皮肤总开关：10/19 自动上线，11/2 自动下线，无需再手动改代码 */
+function applySkin(){
+  if(!hwOn()) return;
+  document.body.classList.add("halloween");
+  $("heroImg").style.display = "";                       /* 头图上线 */
+  $("tagline").textContent = "🎃 复婚好吗，孩子总哭 🎃";  /* 副标题换万圣框 */
+  const sw = { d1:"🎃", d3:"🍬", d4:"🦇", t80:"👻" };     /* 部分漂浮 emoji 换装 */
+  document.querySelectorAll(".deco[data-d]").forEach(el=>{ el.textContent = sw[el.dataset.d]; });
+}
+
 function closeBanner(){
   $("banner").style.display = "none";
   try{ localStorage.setItem("bbbanner_off", BANNER_TXT); }catch(e){}
@@ -464,7 +508,9 @@ function rollCardHTML(b, sameAuthor, streak){
     const emo = lvl === 4 ? "🫠🫠🫠🫠" : "😈".repeat(lvl);
     note += `<div class="rollNote devil">${emo} ${msg}</div>`;
   }
+  const hxSub = hwOn() ? `<div class="hxSub">👻 Trick or Treat 👻</div>` : "";
   return `<div class="rollDice">🎲 <span class="gt">同人抽抽乐</span> 🎲</div>
+    ${hxSub}
     <div>${badgesOf(b)}</div>
     <div class="rt">${esc(titleOf(b))}</div>
     ${b.m&&b.m.author?`<div class="ra">作者：${esc(b.m.author)}</div>`:""}
@@ -483,7 +529,8 @@ function confettiBurst(){
   const H = innerHeight || document.documentElement.clientHeight || 600;
   cv.width = W; cv.height = H;
   cv.style.display = "block";
-  const colors = ["#ef7d9a","#f7a8b8","#e8a04c","#7fb685","#b48ec9","#c08552"];
+  const colors = hwOn() ? ["#e8a04c","#e07b39","#b48ec9","#7a5c96","#ef7d9a","#5c4033"]
+                        : ["#ef7d9a","#f7a8b8","#e8a04c","#7fb685","#b48ec9","#c08552"];
   const parts = [];
   const cx = W/2, cy = H*0.42;
   for(let i=0;i<130;i++){
@@ -514,6 +561,36 @@ function confettiBurst(){
     if(alive) requestAnimationFrame(tick);
     else{ ctx.clearRect(0,0,cv.width,cv.height); cv.style.display = "none"; }
   });
+}
+
+/* 🎃 万圣 emoji 雨：开场下一波，几秒后自动停止（节后自动关闭） */
+function halloweenRain(){
+  if(!hwOn()) return;
+  const box = document.createElement("div");
+  box.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:150;overflow:hidden";
+  document.body.appendChild(box);
+  const EMO = ["🎃","🍬","👻","🦇","🍭"];
+  const t0 = performance.now();
+  const iv = setInterval(()=>{
+    if(performance.now() - t0 > 4500){
+      clearInterval(iv);
+      setTimeout(()=>box.remove(), 3000);
+      return;
+    }
+    const s = document.createElement("div");
+    s.textContent = EMO[Math.floor(Math.random()*EMO.length)];
+    s.style.cssText = `position:absolute;top:0;left:${Math.random()*94}vw;
+      font-size:${16+Math.random()*18}px;opacity:.85;`;
+    box.appendChild(s);
+    let y = -60, r = Math.random()*360;
+    const vy = 1.6 + Math.random()*2.4, vr = (Math.random()-.5)*5;
+    (function fall(){
+      y += vy; r += vr;
+      s.style.transform = `translateY(${y}px) rotate(${r}deg)`;
+      if(y < innerHeight + 60) requestAnimationFrame(fall);
+      else s.remove();
+    })();
+  }, 160);
 }
 
 function openRoll(){
@@ -562,7 +639,7 @@ function renderNextChunk(){
     ? `已加载 ${Math.min(99, Math.round(READ.chars / READ.totalChars * 100))}%`
     : "";
   if(!more && READ.totalChars > CHUNK_CHARS)
-    $("content").insertAdjacentHTML("beforeend", `<div class="center" style="padding:30px 0">—— 🐻 全文完 🐰 ——</div>`);
+    $("content").insertAdjacentHTML("beforeend", `<div class="center" style="padding:30px 0">—— ${hwOn()?"🎃 全文完 🍬":"🐻 全文完 🐰"} ——</div>`);
 }
 
 async function showReader(enc){
@@ -591,7 +668,7 @@ async function showReader(enc){
       `<a target="_self" href="#/read/${encodeURIComponent(k.name)}">《${esc(titleOf(k))}》</a>`).join("、") + `</div>`;
   }
   $("rRel").innerHTML = rel;
-  $("content").innerHTML = `<div class="center">🐻🐰 正在搬文…</div>`;
+  $("content").innerHTML = `<div class="center">${hwOn()?"🎃🦇":"🐻🐰"} 正在搬文…</div>`;
   $("readMore").style.display = "none";
   try{
     let buf;
@@ -638,7 +715,9 @@ function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;
 let fs = +(localStorage.getItem("bbfs")||18);
 function fontStep(d){ fs=Math.min(26,Math.max(14,fs+d)); localStorage.setItem("bbfs",fs); $("content").style.fontSize=fs+"px"; }
 function applyNight(){
-  const on = localStorage.getItem("bbnight")==="1";
+  let v = localStorage.getItem("bbnight");
+  if(v === null) v = hwOn() ? "1" : "0";  /* 万圣期间新访客默认夜间 */
+  const on = v==="1";
   document.body.classList.toggle("night",on);
   $("nightBtn").textContent = on ? "☀️" : "🌙";
 }
@@ -648,8 +727,10 @@ window.addEventListener("hashchange", route);
 
 
 applyNight();
+applySkin();
 $("content").style.fontSize = fs+"px";
 loadAll();
+halloweenRain();
 </script>
 <!-- 回到顶部 / 回到底部 / 随机推荐 -->
 <div class="floatBtns">
