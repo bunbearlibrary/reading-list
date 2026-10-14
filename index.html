@@ -278,7 +278,7 @@ function applySkin(){
   if(!hwOn()) return;
   document.body.classList.add("halloween");
   $("heroImg").style.display = "";                       /* 头图上线 */
-  $("tagline").textContent = "🎃 复婚好吗，孩子总哭 🎃";  /* 副标题换万圣框 */
+  $("tagline").textContent = "👻 不复婚就捣蛋 👻";     /* 副标题换万圣框 */
   const sw = { d1:"🎃", d3:"🍬", d4:"🦇", t80:"👻" };     /* 部分漂浮 emoji 换装 */
   document.querySelectorAll(".deco[data-d]").forEach(el=>{ el.textContent = sw[el.dataset.d]; });
 }
