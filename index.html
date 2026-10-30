@@ -246,7 +246,7 @@ const BRANCH = "main";
 const PAGE_SIZE = 50;      /* 书架每页显示多少篇 */
 const CHUNK_CHARS = 13000; /* 正文每次渲染的字符数（≈40KB） */
 const HW_START = +new Date("2026-10-14");  /* 万圣限定上线时间 */
-const HW_END   = +new Date("2026-11-02");  /* 万圣限定时效：之后自动恢复原状 */
+const HW_END   = +new Date("2026-11-02");  /* 11月2日0点起自动取消万圣装饰，恢复原状 */
 function hwOn(){ return Date.now() >= HW_START && Date.now() < HW_END; }
 /* ==================== */
 /* 顶部横幅：在仓库根目录放一个 00-banner.txt，写了内容就显示在书架顶端，
@@ -273,7 +273,7 @@ function hwOn(){ return Date.now() >= HW_START && Date.now() < HW_END; }
 let BOOKS = [];
 let NAME2BOOK = {};
 let BANNER_TXT = "";   /* 当前横幅原文，关闭时记住它 */
-/* 万圣限定皮肤总开关：10/19 自动上线，11/2 自动下线，无需再手动改代码 */
+/* 万圣限定皮肤总开关：10/14 自动上线，11/2 自动下线，无需再手动改代码 */
 function applySkin(){
   if(!hwOn()) return;
   document.body.classList.add("halloween");
@@ -376,8 +376,10 @@ async function loadAll(){
     ]);
     if(!listR.ok) throw new Error("api");
     const items = await listR.json();
-    const META = csvR.ok ? parseCSV(decodeBuf(await csvR.arrayBuffer())) : {};
-    if(bnR.ok){
+    /* 本地预览服务器会为不存在的文件回退到 index.html，不能把它当成 CSV 或横幅 */
+    const isHTML = r => (r.headers?.get("content-type") || "").includes("text/html");
+    const META = csvR.ok && !isHTML(csvR) ? parseCSV(decodeBuf(await csvR.arrayBuffer())) : {};
+    if(bnR.ok && !isHTML(bnR)){
       const txt = decodeBuf(await bnR.arrayBuffer()).trim();
       /* 关过的旧横幅不再烦人；换了新内容会重新显示 */
       if(txt && txt !== localStorage.getItem("bbbanner_off")){
@@ -386,8 +388,12 @@ async function loadAll(){
         $("banner").style.display = "";
       }
     }
+    const EPUBS = Object.fromEntries(items
+      .filter(i => i.type==="file" && /\.epub$/i.test(i.name))
+      .map(i => [i.name.replace(/\.epub$/i,""), i.name]));
     BOOKS = items.filter(i => i.type==="file" && /\.txt$/i.test(i.name) && i.name !== "00-banner.txt")
-                 .map(i => ({ name:i.name, size:i.size, m:META[i.name]||null }));
+                 .map(i => ({ name:i.name, size:i.size, m:META[i.name]||null,
+                   epub:EPUBS[i.name.replace(/\.txt$/i,"")]||null }));
     const dates = BOOKS.map(b=>b.m&&b.m.date).filter(Boolean);
     if(dates.length){
       $("lastUpd").textContent = "最后更新 " + dates.sort().slice(-1)[0].replace(/-/g,"/");
@@ -654,7 +660,8 @@ async function showReader(enc){
   if(b.size) meta.push("约 " + (b.size/1024/1.4).toFixed(0) + " 千字");
   $("rMeta").innerHTML = meta.join(" · ");
   $("rTags").innerHTML = badgesOf(b) + typeTagsOf(b)
-    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download onclick="trackDL('${esc(name)}')">下载 TXT</a>`;
+    + ` <a class="dl2" href="./${encodeURIComponent(name)}" download onclick="trackDL('${esc(name)}')">下载 TXT</a>`
+    + (b.epub ? ` <a class="dl2" href="./${encodeURIComponent(b.epub)}" download onclick="trackDL('${esc(b.epub)}')">下载 EPUB</a>` : "");
   let rel = "";
   if(b.m && b.m.parent){
     const p = NAME2BOOK[b.m.parent];
