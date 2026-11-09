@@ -57,6 +57,7 @@
     width:46px; font-size:18px; cursor:pointer; }
   .statline{ display:flex; align-items:center; gap:8px; padding:4px 8px 12px; }
   .stats{ flex:1; color:var(--soft); font-size:13px; }
+  .statusGif{ width:30px; height:30px; vertical-align:middle; }
   .sortbar{ display:flex; gap:6px; }
   .sbtn{ border:2px solid var(--line); background:var(--card); color:var(--soft);
     border-radius:999px; padding:4px 12px; font-size:12px; cursor:pointer; font-family:inherit;
@@ -205,7 +206,7 @@ body.night .rollNote.devil{ background:#7a5c96; }
       <button id="nightBtn" title="夜间模式">🌙</button>
     </div>
     <div class="statline">
-      <div class="stats" id="stats">🧸正在清点藏书…</div>
+      <div class="stats" id="stats"><img class="statusGif" src="./runpig.gif" alt="" aria-hidden="true">正在清点藏书…</div>
       <div class="sortbar" id="sortBar" style="display:none">
         <button class="sbtn" id="sortDateBtn" onclick="setSort('date')"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>最新</button>
         <button class="sbtn" id="sortNameBtn" onclick="setSort('name')"><svg class="ic" viewBox="0 0 24 24"><path d="M7 4v12"/><path d="m3.8 12.8 3.2 3.2 3.2-3.2"/><text x="12.5" y="9.5" font-size="8" font-weight="700" fill="currentColor" stroke="none">A</text><text x="15.5" y="19.5" font-size="8" font-weight="700" fill="currentColor" stroke="none">Z</text></svg>篇名</button>
@@ -405,7 +406,7 @@ async function loadAll(){
     paintSortBtns();
     renderList(); route();
   }catch(e){
-    $("stats").innerHTML = "😢 书架暂时打不开（可能是请求太频繁）<br>稍等一分钟刷新试试～";
+    $("stats").innerHTML = '<img class="statusGif" src="./deadpig.gif" alt="" aria-hidden="true"> 书架暂时打不开（可能是请求太频繁）<br>稍等一分钟刷新试试～';
   }
 }
 
@@ -675,7 +676,7 @@ async function showReader(enc){
       `<a target="_self" href="#/read/${encodeURIComponent(k.name)}">《${esc(titleOf(k))}》</a>`).join("、") + `</div>`;
   }
   $("rRel").innerHTML = rel;
-  $("content").innerHTML = `<div class="center">${hwOn()?"🎃🦇":"🐻🐰"} 正在搬文…</div>`;
+  $("content").innerHTML = `<div class="center">${hwOn()?"🎃🦇":'<img class="statusGif" src="./runpig.gif" alt="" aria-hidden="true">'} 正在搬文…</div>`;
   $("readMore").style.display = "none";
   try{
     let buf;
@@ -697,7 +698,7 @@ async function showReader(enc){
     $("content").innerHTML = "";
     renderNextChunk();
   }catch(e){
-    $("content").innerHTML = `<div class="center">😢 这篇搬运失败了，刷新试试？</div>`;
+    $("content").innerHTML = `<div class="center"><img class="statusGif" src="./deadpig.gif" alt="" aria-hidden="true"> 这篇搬运失败了，刷新试试？</div>`;
   }
 }
 function goList(){ location.hash = ""; }
