@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
 <title>YJlib</title>
 <style>
   :root{
@@ -15,7 +16,29 @@
     --bg:#211b16; --card:#2e2620; --ink:#e9dcd0; --soft:#b39a86; --line:#453a30;
     --green-bg:#26372a; --orange-bg:#3d3020; --purple-bg:#352b3d; --gray-bg:#35302a;
   }
+  /* 圣诞限定：蛋奶酒米色 / 冬青绿 / 热红酒红 / 肉桂金 / 霜银灰 */
+  body.christmas{
+    --bg:#d8c8b8; --card:#eae2da; --ink:#78211e; --soft:#78211e; --line:#bb9771;
+    --pink:#78211e; --pink-deep:#78211e; --green:#616852; --green-bg:#d8c8b8;
+    --orange:#78211e; --orange-bg:#d8c8b8; --purple:#616852; --purple-bg:#d8c8b8;
+    --gray:#78211e; --gray-bg:#d8c8b8;
+  }
+  body.night.christmas{
+    --bg:#25271f; --card:#32352a; --ink:#d8c8b8; --soft:#beb3ac; --line:#616852;
+    --pink:#bb9771; --pink-deep:#d8c8b8; --green:#616852; --green-bg:#32352a;
+    --orange:#bb9771; --orange-bg:#3b3428; --purple:#beb3ac; --purple-bg:#39352f;
+    --gray:#beb3ac; --gray-bg:#3b3a34;
+  }
+  body.christmas .hero{ width:min(340px,82%); filter:drop-shadow(0 6px 14px rgba(187,151,113,.28)); }
+  body.christmas .book{ border-style:dashed; }
+  body.christmas .dl, body.christmas .dl2{ background:#78211e; color:#d8c8b8; box-shadow:0 2px 6px rgba(120,33,30,.18); }
+  body.night.christmas .dl, body.night.christmas .dl2{ background:#bb9771; color:#25271f; box-shadow:0 2px 6px rgba(187,151,113,.18); }
+  body.christmas .floatBtn.diceBtn{ background:linear-gradient(135deg,#78211e,#bb9771,#616852,#beb3ac,#78211e);
+    background-size:400% 400%; animation:hxShift 2.8s ease infinite,xmPaletteGlow 1.8s ease-in-out infinite; }
+  body.christmas .floatBtn.diceBtn.rolling{ animation:diceSpin .45s linear infinite,xmPaletteGlow 1.8s ease-in-out infinite; }
+  @keyframes xmPaletteGlow{ 0%,100%{box-shadow:0 0 8px rgba(187,151,113,.35);} 50%{box-shadow:0 0 20px rgba(187,151,113,.65);} }
   *{box-sizing:border-box; margin:0; padding:0;}
+  button:focus-visible,a:focus-visible,input:focus-visible{ outline:3px solid var(--orange); outline-offset:3px; }
   body{ background:var(--bg); color:var(--ink); min-height:100vh;
     font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
     transition:background .3s; }
@@ -24,8 +47,8 @@
   .deco.d1{ top:12%; left:6%; } .deco.d2{ top:22%; right:8%; animation-delay:1.2s; }
   .deco.d3{ bottom:14%; left:10%; animation-delay:2s; } .deco.d4{ bottom:20%; right:6%; animation-delay:.6s; }
   @keyframes float{ 0%,100%{transform:translateY(0) rotate(-6deg);} 50%{transform:translateY(-14px) rotate(6deg);} }
-  .deco.hxonly{ display:none; }
-  body.halloween .deco.hxonly{ display:block; }
+  .deco.hxonly, .deco.xmonly{ display:none; }
+  body.halloween .deco.hxonly, body.christmas .deco.xmonly{ display:block; }
   .wrap{ position:relative; z-index:1; max-width:720px; margin:0 auto; padding:24px 16px 60px; }
   header{ text-align:center; padding:28px 0 20px; }
   header h1{ font-size:32px; letter-spacing:2px; }
@@ -141,6 +164,17 @@ body.halloween .rollDice .gt{ background:none; -webkit-background-clip:border-bo
 .hxSub{ font-size:12px; font-weight:600; letter-spacing:3px; color:var(--orange); margin:-2px 0 8px;
   animation:hxBlink 1.8s ease-in-out infinite; }
 @keyframes hxBlink{ 0%,100%{opacity:.5;} 50%{opacity:1;} }
+/* 圣诞限定：标题在热红酒红与冬青绿之间缓慢换色 */
+body.christmas .hxline{ color:var(--pink-deep); animation:hxBlink 2.8s ease-in-out infinite; }
+body.christmas .rollDice .gt{ background:none; -webkit-background-clip:border-box; background-clip:border-box;
+  animation:xmColor 5s linear infinite; }
+@keyframes xmColor{
+  0%,100%{ color:#78211e; text-shadow:0 0 6px rgba(187,151,113,.35); }
+  50%{ color:#616852; text-shadow:0 0 6px rgba(187,151,113,.35); } }
+body.night.christmas .rollDice .gt{ animation-name:xmColorNight; }
+@keyframes xmColorNight{
+  0%,100%{ color:#d8c8b8; text-shadow:0 0 6px rgba(187,151,113,.35); }
+  50%{ color:#bb9771; text-shadow:0 0 6px rgba(187,151,113,.45); } }
 /* 随机推荐弹窗 */
 .rollMask{ position:fixed; inset:0; z-index:99; background:rgba(60,40,30,.45);
   display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -168,6 +202,21 @@ body.night .rollNote.devil{ background:#7a5c96; }
 .rollCard .rmeta2{ color:var(--soft); font-size:12px; margin-top:8px; }
 .rollCard .rbtns{ margin-top:16px; display:flex; gap:10px; justify-content:center; }
 .rollCard .dl2{ border:none; cursor:pointer; font-family:inherit; margin:0; }
+/* 圣诞配色的组件层统一 */
+body.christmas .banner, body.christmas .sbtn.on, body.christmas .rollNote{ background:#d8c8b8; color:#78211e; }
+body.night.christmas .banner, body.night.christmas .sbtn.on{ background:#32352a; color:#d8c8b8; }
+body.night.christmas .rollNote{ background:#616852; color:#eae2da; }
+body.christmas .bd-cp, body.christmas .tag{ background:#d8c8b8; color:#78211e; }
+body.night.christmas .bd-cp, body.night.christmas .tag{ background:#616852; color:#eae2da; }
+body.christmas .bd-ok{ background:#616852; color:#eae2da; }
+body.christmas .bd-ing{ background:#bb9771; color:#25271f; }
+body.christmas .bd-ex{ background:#78211e; color:#d8c8b8; }
+body.night.christmas .bd-ing, body.night.christmas .bd-ex{ background:#beb3ac; color:#25271f; }
+body.christmas .rollNote.devil{ background:#78211e; color:#d8c8b8; }
+body.night.christmas .rollNote.devil{ background:#bb9771; color:#25271f; }
+@media (prefers-reduced-motion:reduce){
+  .deco,.floatBtn.diceBtn,.hxline,.hxSub,.rollDice .gt,.rollCard,#rollBody.settle{ animation:none!important; }
+}
 </style>
 <base target="_blank">
 <!-- ▼▼▼ 下载统计： ▼▼▼ -->
@@ -183,9 +232,14 @@ body.night .rollNote.devil{ background:#7a5c96; }
 <div class="deco hxonly" style="top:32%;right:13%;font-size:26px;animation-delay:2.8s">🧙‍♀️</div>
 <div class="deco hxonly" style="bottom:5%;left:24%;font-size:24px;animation-delay:3.4s">🍭</div>
 <div class="deco hxonly" style="top:52%;left:7%;font-size:26px;animation-delay:3s">🐻</div>
+<div class="deco xmonly" style="top:7%;right:38%;font-size:25px;animation-delay:1.9s">🔔</div>
+<div class="deco xmonly" style="top:34%;left:13%;font-size:25px;animation-delay:2.8s">⛄</div>
+<div class="deco xmonly" style="bottom:6%;right:23%;font-size:25px;animation-delay:3.4s">🍪</div>
+<div class="deco xmonly" style="top:54%;right:9%;font-size:26px;animation-delay:3s">🎅</div>
 <div class="wrap">
   <header>
     <img class="hero" id="heroImg" src="./halloween-hero.png" alt="万圣限定：女巫小猪、南瓜刺猬和木乃伊刺猬" style="display:none">
+    <img class="hero" id="xmHeroImg" src="./christmas-hero.png" alt="圣诞限定：圣诞帽小猪、驯鹿刺猬和圣诞树旁的小刺猬" style="display:none">
     <h1>🐻 𝐋𝐈𝐁𝐑𝐀𝐑𝐘 🐰</h1>
     <p class="hxline" id="tagline">◆ 复婚好吗，孩子总哭 ◆</p>
     <p class="upd" id="lastUpd" style="display:none"></p>
@@ -249,6 +303,11 @@ const CHUNK_CHARS = 13000; /* 正文每次渲染的字符数（≈40KB） */
 const HW_START = +new Date("2026-10-14");  /* 万圣限定上线时间 */
 const HW_END   = +new Date("2026-11-02");  /* 11月2日0点起自动取消万圣装饰，恢复原状 */
 function hwOn(){ return Date.now() >= HW_START && Date.now() < HW_END; }
+const XM_START = +new Date("2026-12-19T00:00:00+08:00");  /* 北京时间12月19日0点上线 */
+const XM_END   = +new Date("2026-12-28T00:00:00+08:00");  /* 北京时间12月28日0点恢复原版，27日全天有效 */
+const XM_PREVIEW = new URLSearchParams(location.search).get("skin") === "christmas"
+  && ["localhost","127.0.0.1"].includes(location.hostname);  /* 仅本地预览可提前开启 */
+function xmOn(){ return XM_PREVIEW || (Date.now() >= XM_START && Date.now() < XM_END); }
 /* ==================== */
 /* 顶部横幅：在仓库根目录放一个 00-banner.txt，写了内容就显示在书架顶端，
    文件留空或删除则自动隐藏。支持多行文本。 */
@@ -274,14 +333,23 @@ function hwOn(){ return Date.now() >= HW_START && Date.now() < HW_END; }
 let BOOKS = [];
 let NAME2BOOK = {};
 let BANNER_TXT = "";   /* 当前横幅原文，关闭时记住它 */
-/* 万圣限定皮肤总开关：10/14 自动上线，11/2 自动下线，无需再手动改代码 */
+/* 节日皮肤总开关：按日期自动换装，节后无需再手动改代码。
+   🐻🐰🦔🐖 是永久常驻成员，任何节日都不替换、不删除；sw 只能换其他装饰。 */
 function applySkin(){
-  if(!hwOn()) return;
-  document.body.classList.add("halloween");
-  $("heroImg").style.display = "";                       /* 头图上线 */
-  $("tagline").textContent = "👻 不复婚就捣蛋 👻";     /* 副标题换万圣框 */
-  const sw = { d1:"🎃", d3:"🍬", d4:"🦇", t80:"👻" };     /* 部分漂浮 emoji 换装 */
-  document.querySelectorAll(".deco[data-d]").forEach(el=>{ el.textContent = sw[el.dataset.d]; });
+  if(hwOn()){
+    document.body.classList.add("halloween");
+    $("heroImg").style.display = "";
+    $("tagline").textContent = "👻 不复婚就捣蛋 👻";
+    const sw = { d3:"🍬", d4:"🦇", t80:"👻" };
+    document.querySelectorAll(".deco[data-d]").forEach(el=>{ if(sw[el.dataset.d]) el.textContent = sw[el.dataset.d]; });
+    return;
+  }
+  if(!xmOn()) return;
+  document.body.classList.add("christmas");
+  $("xmHeroImg").style.display = "";
+  $("tagline").textContent = "🎁 复婚好吗，孩子总哭 🎁";
+  const sw = { d3:"🎁", d4:"🦌", t80:"❄️" };
+  document.querySelectorAll(".deco[data-d]").forEach(el=>{ if(sw[el.dataset.d]) el.textContent = sw[el.dataset.d]; });
 }
 
 function closeBanner(){
@@ -423,7 +491,7 @@ function cpTags(b){ return parseName(b.name).tags; }
 
 function statusBadge(m){
   if(!m || !m.status) return "";
-  const cls = m.status.includes("连载")||m.status.includes("未完结") ? "bd-ing" : "bd-ok";
+  const cls = m.status.includes("连载")||m.status.includes("未完") ? "bd-ing" : "bd-ok";
   return `<span class="bd ${cls}">${esc(m.status)}</span>`;
 }
 function badgesOf(b){
@@ -515,9 +583,10 @@ function rollCardHTML(b, sameAuthor, streak){
     const emo = lvl === 4 ? "🫠🫠🫠🫠" : "😈".repeat(lvl);
     note += `<div class="rollNote devil">${emo} ${msg}</div>`;
   }
-  const hxSub = hwOn() ? `<div class="hxSub">👻 Trick or Treat 👻</div>` : "";
+  const festiveSub = hwOn() ? `<div class="hxSub">👻 Trick or Treat 👻</div>`
+                   : xmOn() ? `<div class="hxSub">🎄 Merry Christmas 🎄</div>` : "";
   return `<div class="rollDice">🎲 <span class="gt">同人抽抽乐</span> 🎲</div>
-    ${hxSub}
+    ${festiveSub}
     <div>${badgesOf(b)}</div>
     <div class="rt">${esc(titleOf(b))}</div>
     ${b.m&&b.m.author?`<div class="ra">作者：${esc(b.m.author)}</div>`:""}
@@ -531,12 +600,14 @@ function rollCardHTML(b, sameAuthor, streak){
 }
 /* 彩带庆祝 */
 function confettiBurst(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const cv = $("confettiCv"), ctx = cv.getContext("2d");
   const W = innerWidth || document.documentElement.clientWidth || 800;
   const H = innerHeight || document.documentElement.clientHeight || 600;
   cv.width = W; cv.height = H;
   cv.style.display = "block";
   const colors = hwOn() ? ["#e8a04c","#e07b39","#b48ec9","#7a5c96","#ef7d9a","#5c4033"]
+               : xmOn() ? ["#78211e","#616852","#bb9771","#beb3ac","#d8c8b8"]
                         : ["#ef7d9a","#f7a8b8","#e8a04c","#7fb685","#b48ec9","#c08552"];
   const parts = [];
   const cx = W/2, cy = H*0.42;
@@ -568,36 +639,6 @@ function confettiBurst(){
     if(alive) requestAnimationFrame(tick);
     else{ ctx.clearRect(0,0,cv.width,cv.height); cv.style.display = "none"; }
   });
-}
-
-/* 🎃 万圣 emoji 雨：开场下一波，几秒后自动停止（节后自动关闭） */
-function halloweenRain(){
-  if(!hwOn()) return;
-  const box = document.createElement("div");
-  box.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:150;overflow:hidden";
-  document.body.appendChild(box);
-  const EMO = ["🎃","🍬","👻","🦇","🍭"];
-  const t0 = performance.now();
-  const iv = setInterval(()=>{
-    if(performance.now() - t0 > 4500){
-      clearInterval(iv);
-      setTimeout(()=>box.remove(), 3000);
-      return;
-    }
-    const s = document.createElement("div");
-    s.textContent = EMO[Math.floor(Math.random()*EMO.length)];
-    s.style.cssText = `position:absolute;top:0;left:${Math.random()*94}vw;
-      font-size:${16+Math.random()*18}px;opacity:.85;`;
-    box.appendChild(s);
-    let y = -60, r = Math.random()*360;
-    const vy = 1.6 + Math.random()*2.4, vr = (Math.random()-.5)*5;
-    (function fall(){
-      y += vy; r += vr;
-      s.style.transform = `translateY(${y}px) rotate(${r}deg)`;
-      if(y < innerHeight + 60) requestAnimationFrame(fall);
-      else s.remove();
-    })();
-  }, 160);
 }
 
 function openRoll(){
@@ -646,7 +687,7 @@ function renderNextChunk(){
     ? `已加载 ${Math.min(99, Math.round(READ.chars / READ.totalChars * 100))}%`
     : "";
   if(!more && READ.totalChars > CHUNK_CHARS)
-    $("content").insertAdjacentHTML("beforeend", `<div class="center" style="padding:30px 0">—— ${hwOn()?"🎃 全文完 🍬":"🐻 全文完 🐰"} ——</div>`);
+    $("content").insertAdjacentHTML("beforeend", `<div class="center" style="padding:30px 0">—— ${hwOn()?"🎃 全文完 🍬":xmOn()?"🎄 全文完 🎁":"🐻 全文完 🐰"} ——</div>`);
 }
 
 async function showReader(enc){
@@ -676,7 +717,7 @@ async function showReader(enc){
       `<a target="_self" href="#/read/${encodeURIComponent(k.name)}">《${esc(titleOf(k))}》</a>`).join("、") + `</div>`;
   }
   $("rRel").innerHTML = rel;
-  $("content").innerHTML = `<div class="center">${hwOn()?"🎃🦇":'<img class="statusGif" src="./runpig.gif" alt="" aria-hidden="true">'} 正在搬文…</div>`;
+  $("content").innerHTML = `<div class="center"><img class="statusGif" src="./runpig.gif" alt="" aria-hidden="true"> 正在搬文…</div>`;
   $("readMore").style.display = "none";
   try{
     let buf;
@@ -724,7 +765,7 @@ let fs = +(localStorage.getItem("bbfs")||18);
 function fontStep(d){ fs=Math.min(26,Math.max(14,fs+d)); localStorage.setItem("bbfs",fs); $("content").style.fontSize=fs+"px"; }
 function applyNight(){
   let v = localStorage.getItem("bbnight");
-  if(v === null) v = hwOn() ? "1" : "0";  /* 万圣期间新访客默认夜间 */
+  if(v === null) v = (hwOn() || xmOn()) ? "1" : "0";  /* 节日期间新访客默认夜间 */
   const on = v==="1";
   document.body.classList.toggle("night",on);
   $("nightBtn").textContent = on ? "☀️" : "🌙";
@@ -738,7 +779,6 @@ applyNight();
 applySkin();
 $("content").style.fontSize = fs+"px";
 loadAll();
-halloweenRain();
 </script>
 <!-- 回到顶部 / 回到底部 / 随机推荐 -->
 <div class="floatBtns">
